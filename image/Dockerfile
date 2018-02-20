@@ -11,6 +11,8 @@
 FROM ubuntu:16.04
 MAINTAINER Thomas Weise <tweise@ustc.edu.cn>
 
+ENV DEBIAN_FRONTEND noninteractive
+
 RUN export LANG=C.UTF-8 &&\
     apt-get clean &&\
     apt-get update &&\
@@ -47,6 +49,13 @@ RUN export LANG=C.UTF-8 &&\
 # install pandoc
     apt-get install -f -y pandoc=1.16*\
                           pandoc-citeproc=0.9* &&\
+
+# install latexrun
+    apt-get install -f -y python3 \
+                          curl &&\
+    curl https://raw.githubusercontent.com/aclements/latexrun/master/latexrun -o /bin/latexrun &&\
+    chmod +x /bin/latexrun &&\
+
 # free huge amount of unused space
     apt-get purge -f -y make-doc \
                         texlive-fonts-extra-doc \
@@ -70,6 +79,7 @@ RUN export LANG=C.UTF-8 &&\
     rm -rf /tmp/* /var/tmp/* &&\
     rm -rf /var/lib/apt/lists/* &&\    
     rm -f /etc/ssh/ssh_host_*
+
     
 VOLUME ["/doc/", "/usr/share/fonts/external/"]
 
